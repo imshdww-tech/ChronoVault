@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "snapshot.hpp"
+#include "chronovault/snapshot.hpp"
 
 namespace cv
 {
@@ -12,19 +12,51 @@ namespace cv
     class Timeline
     {
     public:
+        using value_type = T;
 
-        void capture(const T& state);
+        void capture(const T& state)
+        {
+            history_.push_back({ current_frame_++, state });
+        }
 
-        T get(size_t frame) const;
+        T get(std::size_t frame) const
+        {
+            if (frame >= history_.size())
+            {
+                throw std::out_of_range("Timeline::get: frame index out of range");
+            }
 
-        size_t size() const;
+            return history_.at(frame).state;
+        }
+
+        const T& current() const
+        {
+            if (history_.empty())
+            {
+                throw std::out_of_range("Timeline::current: no snapshots available");
+            }
+
+            return history_.back().state;
+        }
+
+        std::size_t size() const noexcept
+        {
+            return history_.size();
+        }
+
+        bool empty() const noexcept
+        {
+            return history_.empty();
+        }
+
+        void clear() noexcept
+        {
+            history_.clear();
+            current_frame_ = 0;
+        }
 
     private:
-
-        size_t currentFrame = 0;
-
-        std::vector<Snapshot<T>> history;
+        std::size_t current_frame_ = 0;
+        std::vector<Snapshot<T>> history_;
     };
 }
-
-#include "../../src/timeline.inl"

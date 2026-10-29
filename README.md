@@ -1,41 +1,55 @@
-ChronoVault
-Git for C++ runtime state.
+# ChronoVault
 
-ChronoVault is a modern C++20 library that allows applications to:
+ChronoVault is a small C++20 library for capturing deterministic runtime state snapshots and later querying historical versions.
 
-Capture snapshots
-Rewind state
-Branch timelines
-Merge alternate futures
-Query history
-Replay simulations
-Example
-Player player;
+It gives you a minimal timeline API that stores snapshots, rewinds to a previous frame, and supports simple historical inspection.
 
-timeline.capture(player);
+## Example
 
-player.health = 50;
+```cpp
+#include <iostream>
+#include "chronovault/timeline.hpp"
 
-timeline.capture(player);
+struct Player
+{
+    int health = 100;
+    int level = 1;
+};
 
-auto old =
-    timeline.get(0);
+int main()
+{
+    cv::Timeline<Player> timeline;
 
-std::cout
-    << old.health;
-Output:
+    Player player;
+    timeline.capture(player);
 
-100
+    player.health = 50;
+    timeline.capture(player);
 
-Features
-✅ Snapshot Engine
+    player.health = 10;
+    timeline.capture(player);
 
-✅ Branching Timelines
+    std::cout << timeline.get(0).health << '\n';
+    std::cout << timeline.get(1).health << '\n';
+    std::cout << timeline.get(2).health << '\n';
 
-✅ Historical Queries
+    std::cout << "Latest health: " << timeline.current().health << '\n';
+    std::cout << "Snapshot count: " << timeline.size() << '\n';
+}
+```
 
-✅ Replay Engine
+## Build
 
-✅ Serialization
+```bash
+cmake -S . -B build
+cmake --build build
+./build/basic_example
+```
 
-✅ Performance Benchmarks
+## Features
+
+- Snapshot-based state capture
+- Rewindable time-travel queries
+- Safe range checking for historical access
+- CMake-based build setup
+- Header-first C++20 API

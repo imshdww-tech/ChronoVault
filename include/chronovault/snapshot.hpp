@@ -7,7 +7,7 @@ namespace cv
     template<typename T>
     struct Snapshot
     {
-        size_t frame;
-        T state;
+        std::size_t frame = 0;
+        T state{};
     };
 }
