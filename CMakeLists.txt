@@ -6,12 +6,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(ChronoVault STATIC
-    src/timeline.cpp
-)
+add_library(ChronoVault INTERFACE)
 
 target_include_directories(ChronoVault
-    PUBLIC
+    INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 

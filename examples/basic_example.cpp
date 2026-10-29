@@ -5,21 +5,22 @@
 struct Player
 {
     int health = 100;
-    int level = 1;
+    float x = 0.0f;
+    float y = 0.0f;
 };
 
 int main()
 {
     cv::Timeline<Player> timeline;
 
-    Player player;
-    timeline.capture(player);
+    Player p;
+    timeline.capture(p);
 
-    player.health = 50;
-    timeline.capture(player);
+    p.health = 50;
+    timeline.capture(p);
 
-    player.health = 10;
-    timeline.capture(player);
+    p.health = 20;
+    timeline.capture(p);
 
     std::cout << "Frame 0 health: " << timeline.get(0).health << '\n';
     std::cout << "Frame 1 health: " << timeline.get(1).health << '\n';
